@@ -1,3 +1,4 @@
+import logging
 import random
 
 from datacenter.models import Chastisement, Commendation, Lesson, Mark, Schoolkid, Subject
@@ -7,7 +8,7 @@ from typing import List, Optional
 def get_schoolkid(schoolkid_full_name: str) -> Optional[Schoolkid]:
     schoolkids = Schoolkid.objects.filter(full_name__contains=schoolkid_full_name)
     if len(schoolkids) != 1:
-        print(f'There is {"less" if len(schoolkids) < 1 else "more"} than one student with this name')
+        logging.info(f'There is {"less" if len(schoolkids) < 1 else "more"} than one student with this name')
         return
     return schoolkids.get()
 
@@ -69,7 +70,7 @@ def create_commendation(schoolkid_full_name: str, subject_title: str) -> None:
         subject=subject,
     ).order_by('-date')
     if not lessons:
-        print('There is no lessons with this student')
+        logging.info('There is no lessons with this student')
         return
     last_lesson = lessons.get()
     commendation = Commendation(
