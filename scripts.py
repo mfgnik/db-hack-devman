@@ -6,11 +6,12 @@ from typing import List, Optional
 
 
 def get_schoolkid(schoolkid_full_name: str) -> Optional[Schoolkid]:
-    schoolkids = Schoolkid.objects.filter(full_name__contains=schoolkid_full_name)
-    if len(schoolkids) != 1:
-        logging.info(f'There is {"less" if len(schoolkids) < 1 else "more"} than one student with this name')
-        return
-    return schoolkids.get()
+    try:
+        return Schoolkid.objects.get(full_name__contains=schoolkid_full_name)
+    except Schoolkid.DoesNotExist:
+        logging.info(f'There is less than one student with this name')
+    except Schoolkid.Schoolkid.MultipleObjectsReturned:
+        logging.info(f'There is more than one student with this name')
 
 
 def fix_marks(schoolkid_full_name: str) -> None:
